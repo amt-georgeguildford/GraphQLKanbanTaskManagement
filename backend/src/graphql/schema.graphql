@@ -1,0 +1,122 @@
+type Board{
+    id: ID!
+    name: String!
+    columns: [Column!]
+}
+type Column{
+    id: ID!
+    name: String!
+    position: Int!
+    tasks: [Task!]
+}
+
+type Task{
+    id: ID!
+    title: String!
+    description: String
+    position: Int
+    subtasks: [Subtask!]
+}
+
+type Subtask{
+    id: ID!
+    title: String!
+    checked: Boolean
+}
+
+type Query{
+    getBoards: [Board!]!
+    getBoard(id: ID!): Board!
+}
+
+type Mutation{
+    
+    createBoard(board: BoardNew!): Board!
+    updateBoard(updateBoard: UpdateBoard!): Board!
+    deleteBoard(id: ID!): Board!
+
+    createColumn(column: AddNewColumn!): Column!
+    deleteColumn(id: ID!): Column!
+    updateColumn(updateColumn: UpdateColumn!): Column!
+
+    createTask(createTask: CreateTask!): Task!
+    deleteTask(id: ID!): Task!
+    updateTask(updateTask: updateTask!): Task!
+
+    checkSubtask(checkSubtask: checkSubtask!): Subtask!
+
+    dragAndDropTask(dragAndDropTask:DragAndDropTask!): DragAndDropTaskResponse!
+}
+
+# Input
+input BoardNew{
+    name: String!
+    columns: [String!]
+}
+
+input ColumnNew{
+    id: ID!
+    name: String!
+}
+
+input AddNewColumn{
+    boardId: String!
+    name: String!
+}
+input UpdateBoard{
+    id: ID!
+    name: String
+    oldColumns: [ColumnNew!]! 
+    newColumns: [String!]
+    deletedColumns: [String!]
+}
+
+input UpdateColumn{
+    id: String!
+    name: String
+    position: Int
+}
+
+input CreateTask{
+    columnId: String!
+    title: String!
+    description: String
+    subtasks: [String!]
+}
+
+input updateTask{
+    id: ID!
+    title: String
+    description: String
+    oldSubtasks: [SubtaskUpdate!]!
+    newSubtasks: [String!]
+    deletedSubtasks: [String!]
+    columnId: ID!
+}
+
+input SubtaskUpdate{
+    subtaskId: String!
+    title: String
+    description: String
+    checked: Boolean
+}
+
+input checkSubtask{
+    id: ID!
+    checked: Boolean!
+}
+
+input DragAndDropTask{
+    taskId: ID!
+    prevLocation: DroppableColumn!
+    newLocation: DroppableColumn!
+}
+input DroppableColumn{
+    columnId: String!
+    position: Int!
+}
+
+type DragAndDropTaskResponse{
+    prevColumn: Column!
+    newColumn: Column!
+}
